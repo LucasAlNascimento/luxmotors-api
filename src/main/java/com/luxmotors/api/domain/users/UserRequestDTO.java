@@ -1,8 +1,8 @@
 package com.luxmotors.api.domain.users;
 
-public record UsersRequestDTO(
+public record UserRequestDTO(
         String nome,
         String email,
         String senha,
-        Boolean isAdmin) {
+        boolean isAdmin) {
 }

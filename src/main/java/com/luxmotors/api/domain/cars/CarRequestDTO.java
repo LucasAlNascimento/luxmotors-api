@@ -1,9 +1,7 @@
 package com.luxmotors.api.domain.cars;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public record CarRequestDTO(
         String marca,
@@ -11,8 +9,7 @@ public record CarRequestDTO(
         Integer ano,
         String cor,
         BigDecimal precoDiaria,
-        Boolean disponivel,
-        MultipartFile image,
+        boolean disponivel,
         String descricao,
-        Date dataCadastro) {
+        LocalDateTime dataCadastro) {
 }

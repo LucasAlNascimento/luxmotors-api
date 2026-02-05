@@ -1,88 +1,58 @@
 package com.luxmotors.api.services;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.luxmotors.api.domain.cars.CarRequestDTO;
-import com.luxmotors.api.domain.cars.Cars;
-import com.luxmotors.api.domain.cars.CarsDetailsDTO;
-import com.luxmotors.api.repositories.CarsRepository;
-import com.luxmotors.api.repositories.FavoritesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.luxmotors.api.domain.cars.Car;
+import com.luxmotors.api.repositories.CarRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CarService {
 
-    @Value("${aws.bucket.name}")
-    private String bucketName;
+    private final CarRepository carRepository;
+    private final S3Service s3Service;
 
-    @Autowired
-    private AmazonS3 s3Client;
+    public Car createCar(CarRequestDTO data) {
+        Car cars = Car.builder()
+                .marca(data.marca())
+                .modelo(data.modelo())
+                .ano(data.ano())
+                .cor(data.cor())
+                .precoDiaria(data.precoDiaria())
+                .disponivel(data.disponivel())
+                .descricao(data.descricao())
+                .dataCadastro(data.dataCadastro())
+                .build();
 
-    @Autowired
-    private CarsRepository carsRepository;
+        return carRepository.save(cars);
+    }
 
-    @Autowired
-    private FavoritesRepository favoritesRepository;
-
-    public Cars createCar(CarRequestDTO data) {
-        String imgUrl = null;
-
-        if (data.image() != null) {
-            imgUrl = this.uploadImg(data.image());
+    public String uploadImage(UUID carId, MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Arquivo inválido");
         }
 
-        Cars cars = new Cars();
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new IllegalArgumentException("Carro não encontrado"));
 
-        cars.setMarca(data.marca());
-        cars.setModelo(data.modelo());
-        cars.setAno(data.ano());
-        cars.setCor(data.cor());
-        cars.setPrecoDiaria(data.precoDiaria());
-        cars.setDisponivel(data.disponivel());
-        cars.setImagemUrl(imgUrl);
-        cars.setDescricao(data.descricao());
-        cars.setDataCadastro(data.dataCadastro());
+        String imageUrl = s3Service.uploadImg(file);
 
-        return carsRepository.save(cars);
+        car.setImgUrl(imageUrl);
+
+        return carRepository.save(car).getImgUrl();
     }
 
-    private String uploadImg(MultipartFile multipartFile) {
-        String fileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
-
-        try {
-            File file = this.convertMultipartToFile(multipartFile);
-            s3Client.putObject(bucketName, fileName, file);
-            file.delete();
-            return s3Client.getUrl(bucketName, fileName).toString();
-        } catch (Exception e) {
-            System.out.println("Erro ao subir arquivo");
-            return "";
-        }
+    public List<Car> findAllCars() {
+        return carRepository.findAll();
     }
 
-    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
-        File convFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(multipartFile.getBytes());
-        fos.close();
-        return convFile;
-    }
-
-    public List<Cars> findAllCars() {
-        return carsRepository.findAll();
-    }
-
-    public Cars findCarById(UUID carId) {
-        return carsRepository.findById(carId)
+    public Car findCarById(UUID carId) {
+        return carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Carro com id " + carId + " não encontrado"));
     }
 }

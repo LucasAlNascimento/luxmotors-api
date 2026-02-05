@@ -1,13 +1,13 @@
 package com.luxmotors.api.domain.users;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record UsersDetailsDTO(
+public record UserDetailsDTO(
         UUID id,
         String nome,
         String email,
         String senha,
-        Boolean isAdmin,
-        Date dataCadastro) {
+        boolean isAdmin,
+        LocalDateTime dataCadastro) {
 }

@@ -1,9 +1,9 @@
 package com.luxmotors.api.repositories;
 
-import com.luxmotors.api.domain.cars.Cars;
+import com.luxmotors.api.domain.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface CarsRepository extends JpaRepository<Cars, UUID> {
+public interface UserRepository extends JpaRepository<User, UUID> {
 }
