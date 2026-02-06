@@ -4,10 +4,13 @@ import com.luxmotors.api.domain.cars.CarRequestDTO;
 import com.luxmotors.api.domain.cars.Car;
 import com.luxmotors.api.repositories.CarRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -47,12 +50,28 @@ public class CarService {
         return carRepository.save(car).getImgUrl();
     }
 
-    public List<Car> findAllCars() {
-        return carRepository.findAll();
+    public Page<Car> findCars(
+            String marca,
+            String modelo,
+            Integer ano,
+            String cor,
+            BigDecimal precoDiaria,
+            Boolean disponivel,
+            String descricao,
+            Pageable pageable
+    ) {
+        return carRepository.findCars(like(marca), like(modelo), ano, like(cor), precoDiaria, disponivel, like(descricao), pageable);
     }
 
     public Car findCarById(UUID carId) {
         return carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Carro com id " + carId + " não encontrado"));
+    }
+
+    private String like(String value) {
+        return Optional.ofNullable(value)
+                .filter(v -> !v.isBlank())
+                .map(v -> "%" + v.toLowerCase() + "%")
+                .orElse(null);
     }
 }
