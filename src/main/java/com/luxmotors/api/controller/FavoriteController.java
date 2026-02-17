@@ -1,7 +1,9 @@
 package com.luxmotors.api.controller;
 
 import com.luxmotors.api.domain.favorites.Favorite;
+import com.luxmotors.api.domain.favorites.FavoriteRequestDTO;
 import com.luxmotors.api.services.FavoriteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,14 +11,15 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/favorites")
 public class FavoriteController {
 
-    private FavoriteService favoriteService;
+    private final FavoriteService favoriteService;
 
-    @PostMapping("/{userId}/{carId}")
-    public ResponseEntity<Favorite> addFavorite(@PathVariable UUID userId, @PathVariable UUID carId) {
-        Favorite favorite = favoriteService.addFavorite(userId, carId);
+    @PostMapping
+    public ResponseEntity<Favorite> addFavorite(@RequestBody FavoriteRequestDTO favoriteRequestDTO) {
+        Favorite favorite = favoriteService.addFavorite(favoriteRequestDTO);
         return ResponseEntity.ok(favorite);
     }
 

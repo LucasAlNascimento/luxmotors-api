@@ -2,6 +2,7 @@ package com.luxmotors.api.services;
 
 import com.luxmotors.api.domain.cars.Car;
 import com.luxmotors.api.domain.favorites.Favorite;
+import com.luxmotors.api.domain.favorites.FavoriteRequestDTO;
 import com.luxmotors.api.domain.users.User;
 import com.luxmotors.api.repositories.CarRepository;
 import com.luxmotors.api.repositories.FavoriteRepository;
@@ -22,15 +23,15 @@ public class FavoriteService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
 
-    public Favorite addFavorite(UUID userId, UUID carId) {
-        favoriteRepository.findByUserIdAndCarId(userId, carId)
+    public Favorite addFavorite(FavoriteRequestDTO favoriteRequestDTO) {
+        favoriteRepository.findByUserIdAndCarId(favoriteRequestDTO.userId(), favoriteRequestDTO.carId())
                 .ifPresent(f -> {
                     throw new IllegalArgumentException("Carro já está nos favoritos!");
                 });
 
-        Car car = carRepository.findById(carId)
+        Car car = carRepository.findById(favoriteRequestDTO.carId())
                 .orElseThrow(() -> new IllegalArgumentException("Carro não encontrado"));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(favoriteRequestDTO.userId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
         Favorite favorite = Favorite.builder()
