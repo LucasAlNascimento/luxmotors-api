@@ -13,8 +13,9 @@ import java.util.UUID;
 public interface CarRepository extends JpaRepository<Car, UUID> {
     @Query("""
 SELECT c FROM Car c
-WHERE (:marca IS NULL OR LOWER(c.marca) LIKE :marca)
-AND (:modelo IS NULL OR LOWER(c.modelo) LIKE :modelo)
+WHERE (:marcaModelo IS NULL OR 
+        LOWER(c.marca) LIKE :marcaModelo OR 
+        LOWER(c.modelo) LIKE :marcaModelo)
 AND (:ano IS NULL OR c.ano = :ano)
 AND (:cor IS NULL OR LOWER(c.cor) LIKE :cor)
 AND (:precoDiaria IS NULL OR c.precoDiaria = :precoDiaria)
@@ -22,8 +23,7 @@ AND (:disponivel IS NULL OR c.disponivel = :disponivel)
 AND (:descricao IS NULL OR LOWER(c.descricao) LIKE :descricao)
 """)
     Page<Car> findCars(
-            @Param("marca") String marca,
-            @Param("modelo") String modelo,
+            @Param("marcaModelo") String marcaModelo,
             @Param("ano") Integer ano,
             @Param("cor") String cor,
             @Param("precoDiaria") BigDecimal precoDiaria,

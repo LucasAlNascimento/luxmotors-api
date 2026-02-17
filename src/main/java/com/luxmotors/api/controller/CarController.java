@@ -36,8 +36,7 @@ public class CarController {
 
     @GetMapping
     public ResponseEntity<Page<Car>> findCars(
-            @RequestParam(required = false) String marca,
-            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) String marcaModelo,
             @RequestParam(required = false) Integer ano,
             @RequestParam(required = false) String cor,
             @RequestParam(required = false) BigDecimal precoDiaria,
@@ -45,7 +44,7 @@ public class CarController {
             @RequestParam(required = false) String descricao,
             Pageable pageable
     ) {
-        Page<Car> cars = carService.findCars(marca, modelo, ano, cor, precoDiaria, disponivel, descricao, pageable);
+        Page<Car> cars = carService.findCars(marcaModelo, ano, cor, precoDiaria, disponivel, descricao, pageable);
         return ResponseEntity.ok(cars);
     }
 

@@ -51,8 +51,7 @@ public class CarService {
     }
 
     public Page<Car> findCars(
-            String marca,
-            String modelo,
+            String marcaModelo,
             Integer ano,
             String cor,
             BigDecimal precoDiaria,
@@ -60,7 +59,7 @@ public class CarService {
             String descricao,
             Pageable pageable
     ) {
-        return carRepository.findCars(like(marca), like(modelo), ano, like(cor), precoDiaria, disponivel, like(descricao), pageable);
+        return carRepository.findCars(like(marcaModelo), ano, like(cor), precoDiaria, disponivel, like(descricao), pageable);
     }
 
     public Car findCarById(UUID carId) {
