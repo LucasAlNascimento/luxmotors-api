@@ -41,6 +41,6 @@ jobs:
           script: |
             pkill -f '.jar' || true
             sleep 2
-            nohup java -jar /home/ec2-user/app/*.jar > /home/ec2-user/app/app.log 2>&1 &
+            nohup java -jar /home/ec2-user/luxmotors/*.jar > /home/ec2-user/luxmotors/app.log 2>&1 &
             sleep 3
             echo "App iniciado com sucesso"
