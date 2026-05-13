@@ -39,9 +39,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            pkill -f '.jar' || true
-            sleep 2
+            PID=$(pgrep -f '.jar') && kill $PID; sleep 2
             nohup java -jar /home/ec2-user/luxmotors/*.jar > /home/ec2-user/luxmotors/app.log 2>&1 &
-            sleep 3
             echo "App iniciado com sucesso"
           request_pty: true
