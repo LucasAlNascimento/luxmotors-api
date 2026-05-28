@@ -38,6 +38,13 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          script_stop: false
+          request_pty: true
           script: |
-            sudo systemctl restart luxmotors
-            sudo systemctl status luxmotors --no-pager
+            if [ -f /home/ec2-user/luxmotors/app.pid ]; then
+              kill $(cat /home/ec2-user/luxmotors/app.pid) 2>/dev/null || true
+            fi
+            sleep 2
+            nohup env $(cat /etc/environment | xargs) java -Djava.net.preferIPv4Stack=true -jar /home/ec2-user/luxmotors/*.jar > /home/ec2-user/luxmotors/app.log 2>&1 &
+            echo $! > /home/ec2-user/luxmotors/app.pid
+            echo "App iniciado com sucesso"
