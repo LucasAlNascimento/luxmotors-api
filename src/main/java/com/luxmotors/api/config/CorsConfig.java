@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173") //TODO: COLOCAR URL OFICIAL QUANDO SUBIR PARA PRODUÇÃO
+                        .allowedOrigins("http://localhost:5173", "https://luxmotors.vercel.app")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
