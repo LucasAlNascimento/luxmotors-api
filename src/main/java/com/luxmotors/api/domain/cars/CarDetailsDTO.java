@@ -14,5 +14,7 @@ public record CarDetailsDTO(
         boolean disponivel,
         String imagemUrl,
         String descricao,
-        LocalDateTime dataCadastro) {
+        LocalDateTime dataCadastro,
+        String model3dUrl,
+        boolean hasModel3d) {
 }

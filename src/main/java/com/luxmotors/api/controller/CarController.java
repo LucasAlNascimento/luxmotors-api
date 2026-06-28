@@ -34,6 +34,12 @@ public class CarController {
         return ResponseEntity.ok(imageUrl);
     }
 
+    @PutMapping(value = "/{id}/model3d", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadModel3d(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
+        String model3dUrl = carService.uploadModel3d(id, file);
+        return ResponseEntity.ok(model3dUrl);
+    }
+
     @GetMapping
     public ResponseEntity<Page<Car>> findCars(
             @RequestParam(required = false) String marcaModelo,

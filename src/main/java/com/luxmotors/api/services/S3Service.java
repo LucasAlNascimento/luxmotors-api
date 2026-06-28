@@ -27,14 +27,21 @@ public class S3Service {
 
     private final AmazonS3 s3Client;
 
-    String uploadImg(MultipartFile file) {
+    public String uploadImg(MultipartFile file) {
+        return upload(file, "images");
+    }
+
+    public String uploadModel3d(MultipartFile file) {
+        return upload(file, "models3d");
+    }
+
+    private String upload(MultipartFile file, String pasta) {
         try {
             String originalName = Optional.ofNullable(file.getOriginalFilename())
                     .orElse("file");
 
             String safeName = originalName.replaceAll("[^a-zA-Z0-9.\\-]", "_");
-
-            String fileName = UUID.randomUUID() + "-" + safeName;
+            String fileName = pasta + "/" + UUID.randomUUID() + "-" + safeName;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());

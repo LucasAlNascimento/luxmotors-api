@@ -47,6 +47,12 @@ public class Car {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
+    @Column(length = 500)
+    private String model3dUrl;
+
+    @Column(nullable = false)
+    private boolean hasModel3d = false;
+
     @PrePersist
     private void prePersist() {
         this.dataCadastro = LocalDateTime.now();

@@ -30,6 +30,8 @@ public class CarService {
                 .disponivel(data.disponivel())
                 .descricao(data.descricao())
                 .dataCadastro(data.dataCadastro())
+                .model3dUrl(data.model3dUrl())
+                .hasModel3d(data.hasModel3d())
                 .build();
 
         return carRepository.save(cars);
@@ -48,6 +50,22 @@ public class CarService {
         car.setImgUrl(imageUrl);
 
         return carRepository.save(car).getImgUrl();
+    }
+
+    public String uploadModel3d(UUID carId, MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Arquivo inválido");
+        }
+
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new IllegalArgumentException("Carro não encontrado"));
+
+        String model3dUrl = s3Service.uploadModel3d(file);
+
+        car.setModel3dUrl(model3dUrl);
+        car.setHasModel3d(true);
+
+        return carRepository.save(car).getModel3dUrl();
     }
 
     public Page<Car> findCars(

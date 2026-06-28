@@ -11,5 +11,7 @@ public record CarRequestDTO(
         BigDecimal precoDiaria,
         boolean disponivel,
         String descricao,
-        LocalDateTime dataCadastro) {
+        LocalDateTime dataCadastro,
+        String model3dUrl,
+        boolean hasModel3d) {
 }
