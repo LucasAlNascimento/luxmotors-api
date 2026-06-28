@@ -21,6 +21,7 @@ public class TokenService {
                 .withIssuer("luxmotors-api")
                 .withSubject(user.getEmail())
                 .withClaim("nome", user.getNome())
+                .withClaim("id", user.getId().toString())
                 .withExpiresAt(Instant.now().plus(2, ChronoUnit.HOURS))
                 .sign(algorithm);
     }
