@@ -70,6 +70,15 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.12.791</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.5.2</version>
+        </dependency>
 	</dependencies>
 
 	<build>
