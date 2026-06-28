@@ -21,7 +21,7 @@ public class ReservationScheduler {
     @Scheduled(cron = "${scheduler.reservation.cron}")
     public void finalizarReservasExpiradas() {
         List<Reservation> expiradas = reservationRepository
-                .findByAtivatrueAndDataFimBefore(LocalDate.now());
+                .findByAtivaTrueAndDataFimBefore(LocalDate.now());
 
         expiradas.forEach(reservation -> {
             reservation.setAtiva(false);

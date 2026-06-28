@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
     List<Reservation> findByUserId(UUID userId);
-    List<Reservation> findByAtivatrueAndDataFimBefore(LocalDate data);
+    List<Reservation> findByAtivaTrueAndDataFimBefore(LocalDate data);
     boolean existsByCarIdAndAtivaTrue(UUID carId);
 }
