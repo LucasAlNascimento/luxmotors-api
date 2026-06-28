@@ -22,36 +22,39 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3Service {
 
-    @Value("${aws.bucket.name}")
-    private String bucketName;
+    @Value("${aws.bucket.cars-images}")
+    private String bucketImagens;
+
+    @Value("${aws.bucket.cars-models3d}")
+    private String bucketModelos3d;
 
     private final AmazonS3 s3Client;
 
     public String uploadImg(MultipartFile file) {
-        return upload(file, "images");
+        return upload(file, bucketImagens);
     }
 
     public String uploadModel3d(MultipartFile file) {
-        return upload(file, "models3d");
+        return upload(file, bucketModelos3d);
     }
 
-    private String upload(MultipartFile file, String pasta) {
+    private String upload(MultipartFile file, String bucket) {
         try {
             String originalName = Optional.ofNullable(file.getOriginalFilename())
                     .orElse("file");
 
             String safeName = originalName.replaceAll("[^a-zA-Z0-9.\\-]", "_");
-            String fileName = pasta + "/" + UUID.randomUUID() + "-" + safeName;
+            String fileName = UUID.randomUUID() + "-" + safeName;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
 
             try (InputStream inputStream = file.getInputStream()) {
-                s3Client.putObject(bucketName, fileName, inputStream, metadata);
+                s3Client.putObject(bucket, fileName, inputStream, metadata);
             }
 
-            return s3Client.getUrl(bucketName, fileName).toString();
+            return s3Client.getUrl(bucket, fileName).toString();
 
         } catch (IOException e) {
             throw new RuntimeException("Erro ao subir arquivo para o S3", e);
